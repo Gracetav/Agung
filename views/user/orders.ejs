@@ -1,0 +1,57 @@
+<div class="max-w-7xl mx-auto py-12 md:py-24 px-6 bg-white rounded-3xl shadow-xl overflow-hidden mb-12">
+    <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-12 tracking-tight">Pesanan Saya</h1>
+
+    <% if (orders && orders.length > 0) { %>
+        <div class="overflow-x-auto border-2 border-gray-100 rounded-3xl p-8 bg-gray-50/50">
+            <table class="w-full text-left font-medium">
+                <thead>
+                    <tr class="text-sm font-black text-blue-600 uppercase tracking-widest border-b-4 border-blue-600/20">
+                        <th class="py-8 px-6">ID Pesanan</th>
+                        <th class="py-8 px-6">Tanggal</th>
+                        <th class="py-8 px-6 text-right">Total</th>
+                        <th class="py-8 px-6 text-center">Status</th>
+                        <th class="py-8 px-6 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <% orders.forEach(order => { %>
+                        <tr class="hover:bg-blue-50/50 transition-colors group">
+                            <td class="py-10 px-6 font-black text-gray-900 text-xl tracking-tighter">#<%= order.id %></td>
+                            <td class="py-10 px-6 font-bold text-gray-500"><%= new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></td>
+                            <td class="py-10 px-6 font-black text-gray-900 text-right text-xl">Rp <%= order.total_price.toLocaleString() %></td>
+                            <td class="py-10 px-6 text-center">
+                                <% if (order.status === 'pending') { %>
+                                    <span class="inline-flex items-center gap-2 px-6 py-2 bg-amber-50 text-amber-700 text-sm font-black uppercase tracking-widest rounded-full border border-amber-200 shadow-sm animate-pulse">Menunggu</span>
+                                <% } else if (order.status === 'paid') { %>
+                                    <span class="inline-flex items-center gap-2 px-6 py-2 bg-emerald-50 text-emerald-700 text-sm font-black uppercase tracking-widest rounded-full border border-emerald-200 shadow-sm">Sudah Bayar</span>
+                                <% } else if (order.status === 'shipped') { %>
+                                    <span class="inline-flex items-center gap-2 px-6 py-2 bg-blue-50 text-blue-700 text-sm font-black uppercase tracking-widest rounded-full border border-blue-200 shadow-sm">Dikirim</span>
+                                <% } else if (order.status === 'completed') { %>
+                                    <span class="inline-flex items-center gap-2 px-6 py-2 bg-indigo-50 text-indigo-700 text-sm font-black uppercase tracking-widest rounded-full border border-indigo-200 shadow-sm">Selesai</span>
+                                <% } else { %>
+                                    <span class="inline-flex items-center gap-2 px-6 py-2 bg-rose-50 text-rose-700 text-sm font-black uppercase tracking-widest rounded-full border border-rose-200 shadow-sm">Ditolak</span>
+                                <% } %>
+                            </td>
+                            <td class="py-10 px-6 text-center">
+                                <a href="/user/orders/<%= order.id %>" class="gradient-blue text-white px-10 py-4 rounded-full font-black text-sm uppercase shadow-lg shadow-blue-200 hover:scale-105 transition-all">Lihat Detail</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <div class="text-center py-24 bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-200">
+            <div class="mb-10 text-blue-200 animate-bounce">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h2 class="text-3xl font-black text-gray-900 mb-4 tracking-tight">Belum Ada Pesanan</h2>
+            <p class="text-gray-500 font-medium mb-12">Anda belum melakukan transaksi belanja apapun.</p>
+            <a href="/" class="gradient-blue text-white px-12 py-5 rounded-full font-bold shadow-lg shadow-blue-200 inline-flex items-center gap-4 hover:scale-105 transition-all text-lg">
+                Mulai Belanja Sekarang
+            </a>
+        </div>
+    <% } %>
+</div>

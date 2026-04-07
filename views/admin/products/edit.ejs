@@ -1,0 +1,62 @@
+<div class="py-12 max-w-4xl mx-auto">
+    <div class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tighter">Edit Produk #<%= product.id %></h1>
+        <p class="text-xl font-bold text-gray-500 uppercase tracking-widest opacity-80">Perbarui Informasi Suku Cadang</p>
+    </div>
+
+    <form action="/admin/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data" class="bg-white p-16 rounded-[40px] shadow-2xl space-y-12 border border-gray-100">
+        <div class="space-y-10">
+            <div class="relative group">
+                <label for="name" class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 block px-6">Nama Produk</label>
+                <input id="name" name="name" type="text" value="<%= product.name %>" required class="w-full px-10 py-6 border-2 border-gray-100 rounded-3xl text-lg font-black text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 transition-all bg-gray-50 shadow-inner" placeholder="Contoh: Oli Yamalube Sport">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="relative group">
+                    <label for="price" class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 block px-6">Harga (Rp)</label>
+                    <input id="price" name="price" type="number" value="<%= product.price %>" required class="w-full px-10 py-6 border-2 border-gray-100 rounded-3xl text-lg font-black text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 transition-all bg-gray-50 shadow-inner" placeholder="0">
+                </div>
+                <div class="relative group">
+                    <label for="stock" class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 block px-6">Stok Tersedia</label>
+                    <input id="stock" name="stock" type="number" value="<%= product.stock %>" required class="w-full px-10 py-6 border-2 border-gray-100 rounded-3xl text-lg font-black text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 transition-all bg-gray-50 shadow-inner" placeholder="0">
+                </div>
+            </div>
+
+            <div class="relative group">
+                <label for="description" class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 block px-6">Deskripsi Produk</label>
+                <textarea id="description" name="description" rows="5" class="w-full px-10 py-8 border-2 border-gray-100 rounded-4xl text-lg font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 transition-all bg-gray-50 shadow-inner" placeholder="Jelaskan detail spesifikasi produk..."><%= product.description %></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-end">
+                <div class="relative group">
+                    <label class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 block px-6">Ganti Foto Baru</label>
+                    <div class="bg-gray-50 p-8 rounded-4xl border-2 border-dashed border-gray-200 group-hover:border-blue-300 transition-all cursor-pointer relative overflow-hidden">
+                        <input type="file" name="image" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10">
+                        <div class="text-center">
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">Max 5MB (JPG/PNG)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-4xl border border-gray-100 flex flex-col items-center">
+                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Foto Saat Ini</p>
+                    <% if (product.image) { %>
+                        <img src="/uploads/products/<%= product.image %>" class="w-24 h-24 rounded-2xl object-cover shadow-sm bg-white p-2 border border-gray-100">
+                    <% } else { %>
+                        <div class="w-24 h-24 rounded-2xl bg-gray-200 flex items-center justify-center text-gray-400">Tanpa Foto</div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-10 flex gap-8">
+            <a href="/admin/products" class="flex-1 px-10 py-6 border-2 border-gray-100 text-gray-900 rounded-3xl font-black text-lg text-center hover:bg-gray-50 transition-all uppercase tracking-widest">Batal</a>
+            <button type="submit" class="flex-[2] gradient-blue text-white py-6 rounded-3xl font-black text-xl shadow-xl shadow-blue-200 hover:scale-[1.02] active:scale-95 transition-all text-center flex items-center justify-center gap-6 group">
+                Simpan Perubahan
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 group-hover:-rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+            </button>
+        </div>
+    </form>
+</div>

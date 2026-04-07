@@ -1,0 +1,117 @@
+<div class="max-w-7xl mx-auto py-12 md:py-24 px-6 bg-white rounded-3xl shadow-xl overflow-hidden mb-12 border border-gray-100">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-10">
+        <div>
+            <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tighter">Detail Pesanan #<%= order.id %></h1>
+            <p class="text-lg font-bold text-gray-500 uppercase tracking-widest"><%= new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+        </div>
+        <div>
+            <% if (order.status === 'pending') { %>
+                <span class="px-10 py-5 bg-amber-50 text-amber-700 text-lg font-black uppercase tracking-widest rounded-full border-2 border-amber-200 shadow-lg shadow-amber-50">Menunggu Pembayaran</span>
+            <% } else if (order.status === 'paid') { %>
+                <span class="px-10 py-5 bg-emerald-50 text-emerald-700 text-lg font-black uppercase tracking-widest rounded-full border-2 border-emerald-200 shadow-lg shadow-emerald-50">Pembayaran Terverifikasi</span>
+            <% } else if (order.status === 'shipped') { %>
+                <span class="px-10 py-5 bg-blue-50 text-blue-700 text-lg font-black uppercase tracking-widest rounded-full border-2 border-blue-200 shadow-lg shadow-blue-50">Sedang Dikirim</span>
+            <% } else if (order.status === 'completed') { %>
+                <span class="px-10 py-5 bg-indigo-50 text-indigo-700 text-lg font-black uppercase tracking-widest rounded-full border-2 border-indigo-200 shadow-lg shadow-indigo-50">Pesanan Selesai</span>
+            <% } else { %>
+                <span class="px-10 py-5 bg-rose-50 text-rose-700 text-lg font-black uppercase tracking-widest rounded-full border-2 border-rose-200 shadow-lg shadow-rose-50">Pesanan Dibatalkan</span>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="border-4 border-gray-50 rounded-3xl p-10 bg-gray-50/20 mb-16 shadow-inner">
+        <table class="w-full text-left font-medium">
+            <thead>
+                <tr class="text-sm font-black text-blue-600 uppercase tracking-widest border-b-4 border-blue-100 pb-8">
+                    <th class="py-6 px-4">Suku Cadang</th>
+                    <th class="py-6 px-4 text-center">Harga</th>
+                    <th class="py-6 px-4 text-center">Jumlah</th>
+                    <th class="py-6 px-4 text-right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                <% items.forEach(item => { %>
+                    <tr class="group hover:bg-white transition-all">
+                        <td class="py-8 px-4 flex items-center gap-6">
+                            <div class="w-20 h-20 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex-shrink-0">
+                                <% if (item.image) { %>
+                                    <img src="/uploads/products/<%= item.image %>" class="w-full h-full object-cover">
+                                <% } %>
+                            </div>
+                            <span class="font-black text-gray-900 text-lg group-hover:text-blue-600 transition-colors"><%= item.name %></span>
+                        </td>
+                        <td class="py-8 px-4 text-center font-bold text-gray-600">Rp <%= item.price.toLocaleString() %></td>
+                        <td class="py-8 px-4 text-center font-black text-gray-900"><%= item.qty %></td>
+                        <td class="py-8 px-4 text-right font-black text-blue-600 text-xl">Rp <%= (item.price * item.qty).toLocaleString() %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        
+        <div class="mt-12 flex justify-end border-t-4 border-blue-600/10 pt-12 items-center gap-10">
+            <h3 class="text-xl font-bold text-gray-500 uppercase tracking-widest">Total Bayar:</h3>
+            <p class="text-4xl md:text-5xl font-black text-blue-700 tracking-tighter">Rp <%= order.total_price.toLocaleString() %></p>
+        </div>
+    </div>
+
+    <!-- Payment Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+        <div class="bg-blue-50/50 p-10 rounded-4xl border-2 border-blue-100/50">
+            <h3 class="text-2xl font-black text-gray-900 mb-8 flex items-center gap-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              Instruksi Pembayaran
+            </h3>
+            <div class="space-y-8 font-medium">
+                <p class="text-gray-600 text-lg italic">Silakan lakukan transfer ke rekening berikut untuk memproses pesanan Anda.</p>
+                <div class="space-y-4">
+                  <div class="bg-white p-8 rounded-3xl shadow-sm border border-blue-100 flex justify-between items-center group cursor-pointer hover:border-blue-300 transition-all">
+                      <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Bank Central Asia (BCA)</p>
+                        <p class="text-3xl font-black text-blue-600 tracking-tighter">8829-0128-2211</p>
+                        <p class="text-sm font-bold text-gray-600 mt-2">a.n. Bengkel Agung Sejahtera</p>
+                      </div>
+                      <div class="h-14 w-14 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-2xl font-black text-gray-900 mb-8 flex items-center gap-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Konfirmasi Pembayaran
+            </h3>
+            
+            <% if (!payment) { %>
+                <form action="/user/orders/<%= order.id %>/payment" method="POST" enctype="multipart/form-data" class="space-y-8 bg-gray-50/50 p-10 rounded-4xl border-2 border-dashed border-gray-200">
+                    <div>
+                        <label class="block text-sm font-black text-gray-900 uppercase tracking-widest mb-4">Gunakan Bukti Transfer (JPG/PNG)</label>
+                        <div class="relative group">
+                          <input type="file" name="proof" class="w-full text-sm text-gray-500 file:mr-8 file:py-4 file:px-10 file:rounded-full file:border-0 file:text-sm file:font-black file:bg-blue-600 file:text-white hover:file:bg-blue-700 hover:file:scale-105 transition-all cursor-pointer bg-white p-6 rounded-3xl border-2 border-gray-100 group-hover:border-blue-200 shadow-sm" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-6 gradient-blue text-white rounded-3xl font-black text-xl shadow-xl shadow-blue-200 hover:scale-[1.02] active:scale-95 transition-all text-center">Upload Sekarang</button>
+                </form>
+            <% } else { %>
+                <div class="space-y-8 bg-emerald-50/50 p-10 rounded-4xl border-2 border-emerald-100 flex flex-col items-center">
+                    <div class="w-48 h-48 bg-white p-4 rounded-3xl shadow-xl border-4 border-emerald-100 mb-6 group overflow-hidden">
+                        <img src="/uploads/payments/<%= payment.proof %>" class="w-full h-full object-cover transition-transform group-hover:scale-150 cursor-zoom-in" alt="Bukti Transfer">
+                    </div>
+                    <div class="text-center font-bold text-emerald-700">
+                        <p class="text-xl font-black mb-2 animate-bounce">Bukti Sudah Terkirim!</p>
+                        <p class="text-sm uppercase tracking-widest opacity-80">Menunggu Tim Admin Melakukan Verifikasi.</p>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>

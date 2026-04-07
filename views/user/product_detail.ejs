@@ -1,0 +1,57 @@
+<div class="max-w-6xl mx-auto py-12 md:py-24 px-6 bg-white rounded-3xl shadow-xl overflow-hidden mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <!-- Product Image -->
+        <div class="aspect-square bg-gray-50 relative overflow-hidden rounded-3xl shadow-lg border border-gray-100 group">
+            <% if (product.image) { %>
+                <img src="/uploads/products/<%= product.image %>" alt="<%= product.name %>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            <% } else { %>
+                <div class="w-full h-full flex items-center justify-center text-gray-400 bg-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-40 w-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4" />
+                    </svg>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Product Info -->
+        <div class="flex flex-col">
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-4 group-hover:text-blue-600 transition-colors"><%= product.name %></h1>
+            <div class="flex items-center gap-4 mb-10">
+                <span class="text-3xl font-black text-blue-600">Rp <%= product.price.toLocaleString() %></span>
+                <span class="text-sm font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100 shadow-sm animate-bounce">Original Part</span>
+            </div>
+            
+            <div class="mb-10 text-gray-700 leading-relaxed font-medium">
+                <p class="text-xl text-gray-800 mb-6 font-bold flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Deskripsi Produk
+                </p>
+                <p class="text-gray-600"><%= product.description %></p>
+            </div>
+
+            <form action="/user/cart/add" method="POST" class="space-y-10 group">
+                <input type="hidden" name="productId" value="<%= product.id %>">
+                
+                <div class="flex items-center gap-8 mb-8 p-6 bg-gray-50 border border-gray-200 rounded-3xl shadow-sm">
+                    <label for="qty" class="text-lg font-black text-gray-900">Jumlah:</label>
+                    <div class="flex items-center border-2 border-gray-300 rounded-2xl overflow-hidden bg-white shadow-inner">
+                        <button type="button" onclick="const q = document.getElementById('qty'); q.value = Math.max(1, parseInt(q.value) - 1)" class="px-8 py-4 text-gray-900 font-black hover:bg-gray-100 transition-colors">-</button>
+                        <input type="number" id="qty" name="qty" value="1" min="1" max="<%= product.stock %>" class="w-16 text-center border-x-2 border-gray-300 py-4 font-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <button type="button" onclick="const q = document.getElementById('qty'); q.value = Math.min(<%= product.stock %>, parseInt(q.value) + 1)" class="px-8 py-4 text-gray-900 font-black hover:bg-gray-100 transition-colors">+</button>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                  <button type="submit" class="w-full gradient-blue text-white py-6 rounded-3xl font-black text-xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-6 group">
+                        Tambah ke Keranjang
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 group-hover:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                  </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
