@@ -17,6 +17,14 @@ async function migrate() {
 
         await connection.query(`USE \`${process.env.DB_NAME}\`;`);
 
+        // Categories table
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS categories (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL
+            );
+        `);
+
         // Users table
         await connection.query(`
             CREATE TABLE IF NOT EXISTS users (
@@ -25,6 +33,7 @@ async function migrate() {
                 email VARCHAR(255) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 role ENUM('admin', 'user') DEFAULT 'user',
+                is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
@@ -38,7 +47,10 @@ async function migrate() {
                 stock INT NOT NULL,
                 description TEXT,
                 image VARCHAR(255),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                category_id INT,
+                tipekendaraan VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
             );
         `);
 
@@ -48,7 +60,8 @@ async function migrate() {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
                 total_price INT NOT NULL,
-                status ENUM('pending', 'paid', 'shipped', 'completed', 'rejected') DEFAULT 'pending',
+                status ENUM('pending', 'paid', 'processing', 'shipped', 'completed', 'rejected', 'cancelled') DEFAULT 'pending',
+                shipping_address TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
@@ -79,12 +92,33 @@ async function migrate() {
             );
         `);
 
+        // Add missing columns safely
+        const alterations = {
+            'users': ['ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT TRUE'],
+            'products': [
+                'ALTER TABLE products ADD COLUMN category_id INT',
+                'ALTER TABLE products ADD COLUMN tipekendaraan VARCHAR(255)'
+            ],
+            'orders': ['ALTER TABLE orders ADD COLUMN shipping_address TEXT']
+        };
+
+        for (const table in alterations) {
+            for (const sql of alterations[table]) {
+                try {
+                    await connection.query(sql);
+                    console.log(`Executed: ${sql}`);
+                } catch (err) {
+                    // Column might already exist
+                }
+            }
+        }
+
         console.log('--- All tables migrated successfully ---');
         await connection.end();
         process.exit(0);
     } catch (error) {
         console.error('--- Migration failed ---');
-        console.error(error.message);
+        console.error(error.stack);
         process.exit(1);
     }
 }

@@ -5,10 +5,11 @@ module.exports = {
   checkout: async (req, res) => {
     if (!req.session.cart || req.session.cart.length === 0) return res.redirect('/user/cart');
     
+    const { shipping_address } = req.body;
     let total_price = 0;
     req.session.cart.forEach(item => total_price += (item.qty * item.price));
     
-    const [result] = await db.execute('INSERT INTO orders (user_id, total_price, status) VALUES (?, ?, "pending")', [req.session.userId, total_price]);
+    const [result] = await db.execute('INSERT INTO orders (user_id, total_price, status, shipping_address) VALUES (?, ?, "pending", ?)', [req.session.userId, total_price, shipping_address]);
     const order_id = result.insertId;
     
     for (const item of req.session.cart) {

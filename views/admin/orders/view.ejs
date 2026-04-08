@@ -59,6 +59,11 @@
                     <h3 class="text-xl font-bold text-gray-400 uppercase tracking-widest">Total Bayar:</h3>
                     <p class="text-5xl font-black text-blue-700 tracking-tighter">Rp <%= order.total_price.toLocaleString() %></p>
                 </div>
+                
+                <div class="mt-10 p-10 bg-gray-50 rounded-4xl border border-gray-100">
+                    <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">Alamat Pengiriman</p>
+                    <p class="text-lg font-bold text-gray-900 uppercase leading-relaxed"><%= order.shipping_address %></p>
+                </div>
             </div>
 
             <!-- Admin Actions -->
@@ -72,25 +77,33 @@
                     </h3>
                     <div class="flex flex-wrap gap-6 items-center">
                         <form action="/admin/orders/<%= order.id %>/status" method="POST" class="flex flex-wrap gap-6 items-center">
-                            <button type="submit" name="status" value="paid" class="px-10 py-5 bg-emerald-600 text-white rounded-3xl font-black text-sm uppercase shadow-xl hover:bg-emerald-700 hover:scale-105 active:scale-95 transition-all text-center flex items-center gap-4 border-b-4 border-emerald-800">
+                            <button type="submit" name="status" value="paid" 
+                                class="px-10 py-5 rounded-3xl font-black text-sm uppercase shadow-xl transition-all text-center flex items-center gap-4 border-b-4 <%= (order.status === 'paid' || order.status === 'shipped' || order.status === 'completed' || order.status === 'rejected') ? 'bg-gray-400 text-gray-200 border-gray-600 cursor-not-allowed' : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-105 active:scale-95 border-emerald-800' %>"
+                                <%= (order.status === 'paid' || order.status === 'shipped' || order.status === 'completed' || order.status === 'rejected') ? 'disabled' : '' %>>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Konfirmasi Pembayaran
                             </button>
-                            <button type="submit" name="status" value="shipped" class="px-10 py-5 bg-blue-600 text-white rounded-3xl font-black text-sm uppercase shadow-xl hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all text-center flex items-center gap-4 border-b-4 border-blue-800">
+                            <button type="submit" name="status" value="shipped" 
+                                class="px-10 py-5 rounded-3xl font-black text-sm uppercase shadow-xl transition-all text-center flex items-center gap-4 border-b-4 <%= (order.status === 'shipped' || order.status === 'completed' || order.status === 'rejected' || order.status === 'pending') ? 'bg-gray-400 text-gray-200 border-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95 border-blue-800' %>"
+                                <%= (order.status === 'shipped' || order.status === 'completed' || order.status === 'rejected' || order.status === 'pending') ? 'disabled' : '' %>>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                                 Kirim Barang
                             </button>
-                            <button type="submit" name="status" value="completed" class="px-10 py-5 bg-indigo-600 text-white rounded-3xl font-black text-sm uppercase shadow-xl hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all text-center flex items-center gap-4 border-b-4 border-indigo-800">
+                            <button type="submit" name="status" value="completed" 
+                                class="px-10 py-5 rounded-3xl font-black text-sm uppercase shadow-xl transition-all text-center flex items-center gap-4 border-b-4 <%= (order.status === 'completed' || order.status === 'rejected' || order.status === 'pending' || order.status === 'paid') ? 'bg-gray-400 text-gray-200 border-gray-600 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 active:scale-95 border-indigo-800' %>"
+                                <%= (order.status === 'completed' || order.status === 'rejected' || order.status === 'pending' || order.status === 'paid') ? 'disabled' : '' %>>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                                 </svg>
                                 Selesaikan Pesanan
                             </button>
-                            <button type="submit" name="status" value="rejected" class="px-10 py-5 bg-rose-600 text-white rounded-3xl font-black text-sm uppercase shadow-xl hover:bg-rose-700 hover:scale-105 active:scale-95 transition-all text-center flex items-center gap-4 border-b-4 border-rose-800">
+                            <button type="submit" name="status" value="rejected" 
+                                class="px-10 py-5 rounded-3xl font-black text-sm uppercase shadow-xl transition-all text-center flex items-center gap-4 border-b-4 <%= (order.status === 'shipped' || order.status === 'completed' || order.status === 'rejected') ? 'bg-gray-400 text-gray-200 border-gray-600 cursor-not-allowed' : 'bg-rose-600 text-white hover:bg-rose-700 hover:scale-105 active:scale-95 border-rose-800' %>"
+                                <%= (order.status === 'shipped' || order.status === 'completed' || order.status === 'rejected') ? 'disabled' : '' %>>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>

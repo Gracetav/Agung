@@ -18,5 +18,13 @@ module.exports = {
     await db.execute('DELETE FROM users WHERE id = ?', [req.params.id]);
     req.flash('success_msg', 'User berhasil dihapus');
     res.redirect('/admin/users');
+  },
+
+  toggleUser: async (req, res) => {
+    const [user] = await db.execute('SELECT is_active FROM users WHERE id = ?', [req.params.id]);
+    const newStatus = !user[0].is_active;
+    await db.execute('UPDATE users SET is_active = ? WHERE id = ?', [newStatus, req.params.id]);
+    req.flash('success_msg', `User status updated to ${newStatus ? 'Active' : 'Inactive'}!`);
+    res.redirect('/admin/users');
   }
 };

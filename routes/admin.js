@@ -24,6 +24,7 @@ router.get('/dashboard', adminController.dashboard);
 
 // User Management
 router.get('/users', adminController.users);
+router.get('/users/toggle/:id', adminController.toggleUser);
 router.post('/users/delete/:id', adminController.deleteUser);
 
 // Product Management

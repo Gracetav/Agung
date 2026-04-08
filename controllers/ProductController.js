@@ -9,12 +9,13 @@ module.exports = {
     res.render('admin/products/index', { products, title: 'Product Management' });
   },
   
-  create: (req, res) => {
-    res.render('admin/products/create', { title: 'Tambah Produk' });
+  create: async (req, res) => {
+    const [categories] = await db.query('SELECT * FROM categories');
+    res.render('admin/products/create', { title: 'Tambah Produk', categories });
   },
   
   store: async (req, res) => {
-    const { name, price, stock, description } = req.body;
+    const { name, price, stock, description, category_id, tipekendaraan } = req.body;
     const image = req.file ? req.file.filename : null;
     
     if (!name || !price || !stock) {
@@ -22,7 +23,7 @@ module.exports = {
       return res.redirect('/admin/products/create');
     }
     
-    await db.execute('INSERT INTO products (name, price, stock, description, image) VALUES (?, ?, ?, ?, ?)', [name, price, stock, description, image]);
+    await db.execute('INSERT INTO products (name, price, stock, description, image, category_id, tipekendaraan) VALUES (?, ?, ?, ?, ?, ?, ?)', [name, price, stock, description, image, category_id, tipekendaraan]);
     
     req.flash('success_msg', 'Produk berhasil ditambahkan');
     res.redirect('/admin/products');
@@ -32,11 +33,12 @@ module.exports = {
     const [products] = await db.execute('SELECT * FROM products WHERE id = ?', [req.params.id]);
     if (products.length === 0) return res.redirect('/admin/products');
     
-    res.render('admin/products/edit', { product: products[0], title: 'Edit Produk' });
+    const [categories] = await db.query('SELECT * FROM categories');
+    res.render('admin/products/edit', { product: products[0], title: 'Edit Produk', categories });
   },
   
   update: async (req, res) => {
-    const { name, price, stock, description } = req.body;
+    const { name, price, stock, description, category_id, tipekendaraan } = req.body;
     const [oldProducts] = await db.execute('SELECT * FROM products WHERE id = ?', [req.params.id]);
     let image = oldProducts[0].image;
     
@@ -47,7 +49,7 @@ module.exports = {
       image = req.file.filename;
     }
     
-    await db.execute('UPDATE products SET name = ?, price = ?, stock = ?, description = ?, image = ? WHERE id = ?', [name, price, stock, description, image, req.params.id]);
+    await db.execute('UPDATE products SET name = ?, price = ?, stock = ?, description = ?, image = ?, category_id = ?, tipekendaraan = ? WHERE id = ?', [name, price, stock, description, image, category_id, tipekendaraan, req.params.id]);
     
     req.flash('success_msg', 'Produk berhasil diperbarui');
     res.redirect('/admin/products');
@@ -69,8 +71,31 @@ module.exports = {
   
   // User Catalog
   catalog: async (req, res) => {
-    const [products] = await db.query('SELECT * FROM products WHERE stock > 0 ORDER BY id DESC');
-    res.render('user/catalog', { products, title: 'Katalog Produk' });
+    const { search, category, tipekendaraan } = req.query;
+    let query = 'SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE 1=1';
+    let params = [];
+
+    if (search) {
+      query += ' AND p.name LIKE ?';
+      params.push(`%${search}%`);
+    }
+
+    if (category) {
+      query += ' AND p.category_id = ?';
+      params.push(category);
+    }
+
+    if (tipekendaraan) {
+      query += ' AND p.tipekendaraan = ?';
+      params.push(tipekendaraan);
+    }
+
+    query += ' ORDER BY p.id DESC';
+
+    const [products] = await db.query(query, params);
+    const [categories] = await db.query('SELECT * FROM categories');
+    
+    res.render('user/catalog', { products, categories, query: req.query, title: 'Katalog Produk' });
   },
   
   detail: async (req, res) => {
