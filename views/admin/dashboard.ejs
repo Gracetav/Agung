@@ -1,4 +1,11 @@
-<div class="py-12">
+    <div class="mb-10">
+        <a href="/" class="inline-flex items-center gap-4 bg-white border-2 border-gray-100 text-gray-900 px-8 py-4 rounded-2xl font-black text-sm uppercase shadow-sm hover:border-blue-600 hover:text-blue-600 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Kembali ke Beranda
+        </a>
+    </div>
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-10">
         <div>
             <h1 class="text-4xl md:text-6xl font-black text-gray-900 mb-4 tracking-tighter">Admin Dashboard</h1>
@@ -44,11 +51,15 @@
     </div>
 
     <!-- Navigation Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div class="bg-gray-900 p-12 rounded-[40px] shadow-2xl relative overflow-hidden group">
             <div class="relative z-10">
                 <h3 class="text-3xl font-black text-white mb-4">Daftar Pengguna</h3>
-                <p class="text-gray-400 mb-10 text-lg font-medium">Kelola data pelanggan Bengkel Agung.</p>
+                <p class="text-gray-400 mb-6 text-lg font-medium">Kelola data pelanggan & status akun (Aktif/Nonaktif).</p>
+                <div class="flex items-center gap-4 mb-10 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Status Fitur:</span>
+                    <span class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-500/30">User Status Toggle Ready</span>
+                </div>
                 <a href="/admin/users" class="inline-flex items-center gap-4 bg-white text-gray-900 px-10 py-5 rounded-full font-black text-sm uppercase hover:scale-105 transition-all shadow-xl">
                     Buka User Manager
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,9 +74,27 @@
             </div>
         </div>
 
+        <div class="bg-indigo-700 p-12 rounded-[40px] shadow-2xl relative overflow-hidden group">
+            <div class="relative z-10">
+                <h3 class="text-3xl font-black text-white mb-4">Daftar Kategori</h3>
+                <p class="text-indigo-100 mb-10 text-lg font-medium">Klasifikasikan produk agar mudah dicari pelanggan.</p>
+                <a href="/admin/categories" class="inline-flex items-center gap-4 bg-white text-indigo-700 px-10 py-5 rounded-full font-black text-sm uppercase hover:scale-105 transition-all shadow-xl">
+                    Atur Kategori
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                </a>
+            </div>
+            <div class="absolute -right-10 -bottom-10 opacity-10 group-hover:rotate-12 transition-transform duration-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-64 w-64 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+            </div>
+        </div>
+
         <div class="bg-blue-700 p-12 rounded-[40px] shadow-2xl relative overflow-hidden group">
             <div class="relative z-10">
-                <h3 class="text-3xl font-black text-white mb-4">Pengaturan Web</h3>
+                <h3 class="text-3xl font-black text-white mb-4">Pengaturan Produk</h3>
                 <p class="text-blue-100 mb-10 text-lg font-medium">Lakukan pembaruan produk & stok secara real-time.</p>
                 <a href="/admin/products/create" class="inline-flex items-center gap-4 bg-white text-blue-700 px-10 py-5 rounded-full font-black text-sm uppercase hover:scale-105 transition-all shadow-xl">
                     Tambah Produk Baru
