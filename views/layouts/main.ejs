@@ -69,19 +69,49 @@
     <!-- Main Content -->
     <main class="flex-grow py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Flash Messages -->
-            <% if (success_msg && success_msg.length > 0) { %>
-                <div class="mb-6 animate-fade-in flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-2xl shadow-sm">
-                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                    <span class="font-medium"><%= success_msg %></span>
-                </div>
-            <% } %>
-            <% if (error_msg && error_msg.length > 0) { %>
-                <div class="mb-6 animate-fade-in flex items-center gap-3 bg-rose-50 border border-rose-200 text-rose-700 px-6 py-4 rounded-2xl shadow-sm">
-                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                    <span class="font-medium"><%= error_msg %></span>
-                </div>
-            <% } %>
+            <!-- Flash Messages via SweetAlert2 -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const successMsg = <%- JSON.stringify(success_msg) %>;
+                    const errorMsg = <%- JSON.stringify(error_msg) %>;
+
+                    const showMsg = (msg, type) => {
+                        if (msg && msg.length > 0) {
+                            const message = Array.isArray(msg) ? msg[0] : msg;
+                            if (type === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: message,
+                                    confirmButtonColor: '#2563eb',
+                                    timer: 3000,
+                                    timerProgressBar: true
+                                });
+                            } else if (type === 'error') {
+                                if (message.includes('tidak aktif')) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Akun Dinonaktifkan',
+                                        text: message,
+                                        footer: '<a href="/auth/register" style="color: #2563eb; font-weight: bold;">Silakan daftar akun baru di sini</a>',
+                                        confirmButtonColor: '#e11d48'
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Terjadi Kesalahan',
+                                        text: message,
+                                        confirmButtonColor: '#e11d48'
+                                    });
+                                }
+                            }
+                        }
+                    };
+
+                    showMsg(successMsg, 'success');
+                    showMsg(errorMsg, 'error');
+                });
+            </script>
             
             <%- body %>
         </div>

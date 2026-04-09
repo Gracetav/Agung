@@ -54,6 +54,11 @@ module.exports = {
         return res.redirect('/auth/login');
       }
       
+      if (!user.is_active) {
+        req.flash('error_msg', 'Akun Anda sudah tidak aktif. Silakan buat akun baru.');
+        return res.redirect('/auth/login');
+      }
+
       req.session.userId = user.id;
       req.session.userName = user.name;
       req.session.role = user.role;
